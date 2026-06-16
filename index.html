@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dan Harmon's Story Circle Generator</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1e1e24;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .diagram-container {
+            max-width: 320px;
+            margin: 0 auto 1rem auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .diagram-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .story-circle {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (min-width: 648px) {
+            .story-circle {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .step-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .step-card:focus-within {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-number {
+            background-color: var(--accent-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 0.75rem;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            background-color: #121214;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            padding: 0.75rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>The Story Circle</h1>
+            <p>Plot your protagonist's journey across the threshold and back.</p>
+            
+            <div class="diagram-container">
+                <a href="https://upload.wikimedia.org/wikipedia/commons/b/be/Dan_Harmon_Story_Circle.png" target="_blank" title="View full size image">
+                    <img class="diagram-img" 
+                         src="https://upload.wikimedia.org/wikipedia/commons/b/be/Dan_Harmon_Story_Circle.png" 
+                         onerror="this.onerror=null; this.src='Dan_Harmon_Story_Circle.png';" 
+                         alt="Dan Harmon Story Circle Diagram">
+                </a>
+            </div>
+        </header>
+
+        <form id="storyForm">
+            <div class="story-circle">
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <span class="step-title">Zone of Comfort</span>
+                    </div>
+                    <textarea id="step1" placeholder="A character is in a zone of comfort or familiarity..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <span class="step-title">They Desire Something</span>
+                    </div>
+                    <textarea id="step2" placeholder="But they want something..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">3</span>
+                        <span class="step-title">Enter Unfamiliar Situation</span>
+                    </div>
+                    <textarea id="step3" placeholder="They enter an unfamiliar situation..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">4</span>
+                        <span class="step-title">Adapt to It</span>
+                    </div>
+                    <textarea id="step4" placeholder="Adapt to it, facing trials and obstacles..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">5</span>
+                        <span class="step-title">Get What They Desired</span>
+                    </div>
+                    <textarea id="step5" placeholder="Get what they wanted, achieving their goal..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">6</span>
+                        <span class="step-title">Pay a Heavy Price</span>
+                    </div>
+                    <textarea id="step6" placeholder="Pay a heavy price for it..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">7</span>
+                        <span class="step-title">Return to Familiar Situation</span>
+                    </div>
+                    <textarea id="step7" placeholder="Then return to their familiar situation..."></textarea>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="step-number">8</span>
+                        <span class="step-title">Having Changed</span>
+                    </div>
+                    <textarea id="step8" placeholder="Having changed or evolved..."></textarea>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn" onclick="downloadStory()">Download Text File</button>
+            </div>
+        </form>
+
+        <footer>
+            Based on Dan Harmon's 8-Step Plot Embryo
+            <a href="" target="_blank" title=""></a>
+
+<ul>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_101:_Super_Basic_Shit" target="_blank">101: Super basic</a></li>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_102:_Pure,_Boring_Theory" target="_blank">102: Theory</a></li>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_103:_Let%27s_Simplify_Before_Moving_On" target="_blank">103: Simplify</a></li>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_104:_The_Juicy_Details" target="_blank">104: Details</a></li>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_105:_How_TV_is_Different" target="_blank">105: How TV differs</a></li>
+    <li><a href="https://channel101.fandom.com/wiki/Story_Structure_106:_Five_Minute_Pilots" target="_blank">106: 5 min Pilots</a></li>
+</ul>
+
+        </footer>
+    </div>
+
+    <script>
+        function downloadStory() {
+            const steps = [
+                { num: "1", title: "Zone of Comfort", id: "step1" },
+                { num: "2", title: "They Desire Something", id: "step2" },
+                { num: "3", title: "Enter Unfamiliar Situation", id: "step3" },
+                { num: "4", title: "Adapt to It", id: "step4" },
+                { num: "5", title: "Get What They Desired", id: "step5" },
+                { num: "6", title: "Pay a Heavy Price", id: "step6" },
+                { num: "7", title: "Return to Familiar Situation", id: "step7" },
+                { num: "8", title: "Having Changed", id: "step8" }
+            ];
+
+            let fileContent = "DAN HARMON'S STORY CIRCLE\n";
+            fileContent += "===========================\n\n";
+
+            steps.forEach(step => {
+                const textVal = document.getElementById(step.id).value.trim();
+                fileContent += `${step.num}. ${step.title.toUpperCase()}\n`;
+                fileContent += `---------------------------\n`;
+                fileContent += textVal ? textVal : "[No entry recorded for this stage]";
+                fileContent += "\n\n";
+            });
+
+            const date = new Date().toISOString().slice(0,10);
+            const filename = `story_circle_${date}.txt`;
+
+            const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.style.display = "none";
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
